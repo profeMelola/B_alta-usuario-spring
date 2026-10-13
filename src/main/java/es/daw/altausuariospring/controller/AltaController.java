@@ -1,5 +1,8 @@
 package es.daw.altausuariospring.controller;
 
+import es.daw.altausuariospring.service.AltaService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,22 +14,25 @@ import java.util.List;
 @Controller
 public class AltaController {
 
-//    private final OpcionesService opcionesService;
+    private static final Logger LOG = LoggerFactory.getLogger(AltaController.class);
+    private final AltaService service;
 //
-//    // Inyección por constructor: NO hacemos new OpcionesService(), nos lo da Spring
-//    public AltaController(OpcionesService opcionesService) {
-//        this.opcionesService = opcionesService;
-//    }
-
-    @GetMapping("/")
-    public String inicio() {
-        return "index";              // → templates/index.html
+    // Inyección por constructor: NO hacemos new OpcionesService(), nos lo da Spring
+    public AltaController(AltaService service) {
+        this.service = service;
     }
+
+//    @GetMapping("/")
+//    public String inicio() {
+//        return "index";              // → templates/index.html
+//    }
 
     @GetMapping("/alta")
     public String mostrarFormulario(Model model) {
         // 1. Añadir al modelo las listas de tecnologías y niveles
-
+        model.addAttribute("tecnologias",service.getTecnologias());
+        LOG.info("Mostrando los tecnologias, tecnologias: "+service.getTecnologias());
+        model.addAttribute("listaNiveles",service.getNiveles());
         // 2. Devolver el nombre de la vista
         return "formulario";
     }
